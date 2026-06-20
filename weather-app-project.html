@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* SEARCH BOX */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* INPUT */
+        #cityInput {
+            padding: 14px;
+            width: 240px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        /* BUTTON */
+        button {
+            padding: 14px 18px;
+            background: #0077ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: #005fcc;
+            transform: scale(1.05);
+        }
+
+        /* RESULT CONTAINER (CARDS ROW) */
+        #result {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* CARD DESIGN */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 160px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-size: 16px;
+            line-height: 1.5;
+            transition: 0.3s ease;
+        }
+
+        /* hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* TOP BORDER COLORS */
+        .temp {
+            border-top: 5px solid #ff6b6b;
+        }
+
+        .humidity {
+            border-top: 5px solid #4dabf7;
+        }
+
+        .weather {
+            border-top: 5px solid #ffd43b;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-box">
+    <input type="text" placeholder="Enter a City" id="cityInput">
+    <button onclick="getWeather()">Search</button>
+    </div>
+
+    <div id="result" class="weather-container"></div>
+    <script>
+        function getWeatherText(code) {
+
+            if (code === 0) return "Clear Sky ☀️";
+            if (code === 1) return "Mainly Clear 🌤️";
+            if (code === 2) return "Partly Cloudy ⛅";
+            if (code === 3) return "Cloudy ☁️";
+
+            if (code >= 45 && code <= 48) return "Fog 🌫️";
+
+            if (code >= 51 && code <= 55) return "Drizzle 🌦️";
+
+            if (code >= 61 && code <= 65) return "Rain 🌧️";
+
+            if (code >= 71 && code <= 77) return "Snow ❄️";
+
+            if (code >= 80 && code <= 82) return "Rain Showers 🌦️";
+
+            if (code >= 95) return "Thunderstorm ⛈️";
+
+            return "Unknown Weather 🤔";
+        }
+        async function getWeather(){
+
+        let city = document.getElementById("cityInput").value;
+        let locations = {
+            chennai: { lat: 13.0827, lon: 80.2707 },
+            delhi: { lat: 28.7041, lon: 77.1025 },
+            mumbai: { lat: 19.0760, lon: 72.8777 },
+            bangalore: { lat: 12.9716, lon: 77.5946 },
+            hyderabad: { lat: 17.3850, lon: 78.4867 },
+            kolkata: { lat: 22.5726, lon: 88.3639 },
+            pune: { lat: 18.5204, lon: 73.8567 },
+            jaipur: { lat: 26.9124, lon: 75.7873 },
+            lucknow: { lat: 26.8467, lon: 80.9462 },
+            ahmedabad: { lat: 23.0225, lon: 72.5714 },
+            kochi: { lat: 9.9312, lon: 76.2673 },
+            bhubaneswar: { lat: 20.2961, lon: 85.8245 },
+            chandigarh: { lat: 30.7333, lon: 76.7794 },
+            indore: { lat: 22.7196, lon: 75.8577 },
+            nagpur: { lat: 21.1458, lon: 79.0882 }
+        };
+
+        city = city.toLowerCase();
+
+        if(!locations[city]){
+            document.getElementById("result").innerText = "City not found in sample list";
+            return;
+        }
+
+        let lat = locations[city].lat;
+        let lon = locations[city].lon;
+
+        let url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relative_humidity_2m&timezone=auto`;
+
+        let response = await fetch(url);
+        let data = await response.json();
+
+        // CURRENT WEATHER (no index needed)
+        let temperature = data.current_weather.temperature;
+        let weatherCode = data.current_weather.weathercode;
+
+        // hourly humidity (still array)
+        let humidity = data.hourly.relative_humidity_2m[0];
+
+            // displaying those on web page 
+            document.getElementById("result").innerHTML =
+            `
+            <div class="card temp">
+                🌡️<br>
+                <b>Temperature</b><br>
+                ${temperature}°C
+            </div>
+
+            <div class="card humidity">
+                💧<br>
+                <b>Humidity</b><br>
+                ${humidity}%
+            </div>
+
+            <div class="card weather">
+                ☁️<br>
+                <b>Weather</b><br>
+                ${getWeatherText(weatherCode)}
+            </div>
+            `;
+
+        }
+
+    </script>
+</body>
+</html>
