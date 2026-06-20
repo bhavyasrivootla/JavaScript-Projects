@@ -1,0 +1,76 @@
+body{
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, rgb(43,131,226), rgb(88,86,214));
+        }
+
+        h1{
+            text-align: center;
+            color: white;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+        }
+
+        .js-text{
+            width: 70%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .js-btn{
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: white;
+            color: rgb(43,131,226);
+            font-weight: bold;
+            transition: 0.3s;
+            width: 150px;
+        }
+
+        .js-btn:hover{
+            transform: scale(1.05);
+        }
+
+        .js-output{
+            margin-top: 25px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .js-output span{
+            display: inline-block;
+            width: 370px;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .js-output button{
+            margin-left: 5px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .js-output button:hover{
+            transform: scale(1.05); 
+        }
+
+        mark{
+            background-color: lightgreen;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
