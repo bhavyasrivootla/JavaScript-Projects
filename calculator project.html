@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Calculator</title>
+    <style>
+         body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            margin:0;
+            background:linear-gradient(135deg,#0f172a,#1e293b,#334155);
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        .calculator{
+            width:320px;
+            padding:25px;
+            border-radius:25px;
+            background:rgba(255,255,255,0.08);
+            backdrop-filter:blur(15px);
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.4),
+                inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+
+        .display{
+            width:100%;
+            height:75px;
+            border:none;
+            outline:none;
+            border-radius:18px;
+            background:#111827;
+            color:white;
+            font-size:2rem;
+            text-align:right;
+            padding:0 20px;
+            margin-bottom:20px;
+            box-sizing:border-box;
+            box-shadow:inset 0 3px 10px rgba(0,0,0,0.5);
+        }
+
+        .buttons{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:12px;
+        }
+
+        button{
+            height:65px;
+            border:none;
+            border-radius:16px;
+            font-size:1.3rem;
+            font-weight:600;
+            cursor:pointer;
+            background:#1f2937;
+            color:white;
+            transition:all 0.2s ease;
+            box-shadow:0 4px 10px rgba(0,0,0,0.25);
+        }
+
+        button:hover{
+            transform:translateY(-3px);
+        }
+
+        button:active{
+            transform:scale(0.95);
+        }
+
+        button:nth-child(4n){
+            background:#f97316;
+        }
+
+        button:nth-child(4n):hover{
+            transform:translateY(-3px);
+        }
+
+        button:first-child,
+        button:nth-child(2){
+            background:#ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator" id="js-cal">
+        <input type="text" class="display" id="js-input" readonly>
+        <div class="buttons" id="js-btn" >
+            <button onclick="displayClear()">C</button>
+            <button onclick="displayDelete()">DEL</button>
+            <button onclick="appendValue('/')">/</button>
+            <button onclick="appendValue('*')">*</button>
+
+            <button onclick="appendValue(7)">7</button>
+            <button  onclick="appendValue(8)">8</button>
+            <button onclick="appendValue(9)">9</button>
+            <button onclick="appendValue('-')">-</button>
+
+            <button onclick="appendValue(4)">4</button>
+            <button onclick="appendValue(5)">5</button>
+            <button onclick="appendValue(6)">6</button>
+            <button onclick="appendValue('+')">+</button>
+
+            <button onclick="appendValue(1)">1</button>
+            <button onclick="appendValue(2)">2</button>
+            <button onclick="appendValue(3)">3</button>
+            <button onclick="displayEqual()">=</button>
+
+            <button onclick="appendValue(0)">0</button>
+            <button onclick="appendValue('.')">.</button>
+        </div>
+    </div>
+    <script>
+        const inputElement = document.getElementById("js-input");
+        inputElement.value = 0;
+
+        function appendValue(value){
+            inputElement.value += value;
+        }
+
+        function displayClear(){
+            inputElement.value="";
+        }
+
+        function displayDelete(){
+            inputElement.value = inputElement.value.slice(0,-1); // here slice(start,end) indicates that start from 0 and remove the last element
+        }
+
+        function displayEqual(){
+            try{
+                inputElement.value = eval(inputElement.value);
+            }catch{
+                inputElement.value = 'Error';
+            }
+        }
+        
+    </script>
+</body>
+</html>
