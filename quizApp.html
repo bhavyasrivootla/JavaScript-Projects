@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Quiz Application</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#111827;
+            padding:20px;
+        }
+
+        body > div{
+            width:100%;
+            max-width:700px;
+            background:#1f2937;
+            border-radius:18px;
+            padding:20px;
+            box-shadow:0 15px 35px rgba(0,0,0,.35);
+        }
+
+        h1{
+            color:white;
+            text-align:center;
+            margin-bottom:12px;
+            font-size:1.8rem;
+        }
+
+        .questionArea{
+            color:white;
+            font-size:1.3rem;
+            font-weight:600;
+            margin-bottom:12px;
+            line-height:1.4;
+        }
+
+        .options{
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+        }
+
+        .options button{
+            width:100%;
+            padding:12px 15px;
+            border:none;
+            border-radius:10px;
+            background:#374151;
+            color:white;
+            font-size:15px;
+            text-align:left;
+            cursor:pointer;
+            transition:.2s;
+        }
+
+        .options button:hover{
+            background:#2563eb;
+        }
+
+        .next-btn{
+            display:block;
+            margin-left:auto;
+            margin-top:10px;
+
+            width:120px;
+            height:42px;
+
+            border:none;
+            border-radius:10px;
+
+            background:#22c55e;
+            color:white;
+            font-size:15px;
+            font-weight:600;
+
+            cursor:pointer;
+            transition:.2s;
+        }
+
+        .next-btn:hover{
+            background:#16a34a;
+        }
+
+        .result{
+            text-align:center;
+            margin-top:20px;
+            padding:30px;
+        }
+
+        .result h1{
+            font-size:3rem;
+            color:#22c55e;
+            margin-bottom:15px;
+        }
+
+        .js-score{
+            color:rgb(42, 60, 104);
+            font-size:18px;
+            font-weight:600;
+            margin-bottom:10px;
+        }
+
+        .restart-btn{
+            padding:14px 32px;
+            border:none;
+            border-radius:12px;
+            background:linear-gradient(135deg,#3b82f6,#06b6d4);
+            color:white;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .restart-btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 10px 20px rgba(59,130,246,.4);
+        }
+        .selected{
+            background: #2563eb !important;
+            color: white;
+        }
+        .result{
+            display:none;
+            margin-top:15px;
+            text-align:center;
+        }
+        .result p{
+            color:white;
+            font-size:1.5rem;
+            font-weight:600;
+            margin-bottom:25px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1 class="">General Knowledge Quiz</h1>
+        <p class="questionArea">Question Area</p>
+        <div class="options">
+            <button class="firstOption" onclick="selectAnswer(this)">Option 1</button>
+            <button class="secondOption" onclick="selectAnswer(this)">Option 2</button>
+            <button class="thirdOption" onclick="selectAnswer(this)">Option 3</button>
+            <button class="fourthOption" onclick="selectAnswer(this)">Option 4</button>
+        </div>
+        <br>
+        <button class="next-btn" onclick="nextButton()">Next</button>
+        <div class="result">
+            <h1>Quiz Result</h1>
+            <p class="js-score">Your Score : 0/0</p>
+            <!-- button class="restart-btn" onclick="location.reload();">Restart Quiz</button> -->
+            <button class="restart-btn" onclick="restartQuiz()">Restart Quiz </button>
+        </div>
+    </div>
+    <script>
+        //Array of listed questions 
+        const quesArray = [{
+            question: "What is JavaScript primarily used for?",
+            options : [ "Styling web pages",
+                      "Structuring web pages",
+                      "Adding interactivity to web pages",
+                      "Managing databases"
+                    ],
+            
+            correctAnswer : "Adding interactivity to web pages",
+            },
+            {
+                question: "Which keyword is used to declare a variable that cannot be reassigned?",
+                options: [
+                    "let",
+                    "var",
+                    "const",
+                    "static"
+                ],
+                correctAnswer: "const"
+            },
+
+            {
+                question: "Which method is used to print something in the browser console?",
+                options: [
+                    "print()",
+                    "console.log()",
+                    "document.write()",
+                    "alert()"
+                ],
+                correctAnswer: "console.log()"
+            },
+
+            {
+                question: "What does DOM stand for?",
+                options: [
+                    "Document Object Model",
+                    "Data Object Model",
+                    "Document Oriented Method",
+                    "Dynamic Object Method"
+                ],
+                correctAnswer: "Document Object Model"
+            },
+
+            {
+                question: "Which operator is used for strict equality comparison?",
+                options: [
+                    "=",
+                    "==",
+                    "===",
+                    "!="
+                ],
+                correctAnswer: "==="
+            },
+
+            {
+                question: "Which of the following is an array?",
+                options: [
+                    "{}",
+                    "[]",
+                    "()",
+                    "<>"
+                ],
+                correctAnswer: "[]"
+            },
+
+            {
+                question: "Which loop executes at least once?",
+                options: [
+                    "for",
+                    "while",
+                    "do...while",
+                    "foreach"
+                ],
+                correctAnswer: "do...while"
+            },
+
+            {
+                question: "Which method adds an element to the end of an array?",
+                options: [
+                    "pop()",
+                    "shift()",
+                    "push()",
+                    "unshift()"
+                ],
+                correctAnswer: "push()"
+            },
+
+            {
+                question: "Which keyword is used to create a function?",
+                options: [
+                    "method",
+                    "function",
+                    "fun",
+                    "define"
+                ],
+                correctAnswer: "function"
+            },
+
+            {
+                question: "What is the result of typeof 10?",
+                options: [
+                    "string",
+                    "number",
+                    "integer",
+                    "object"
+                ],
+                correctAnswer: "number"
+            }
+        ];
+
+        
+
+        let currentQuestionIndex = 0;
+
+        displayQuestion();
+
+
+        function displayQuestion(){
+            document.querySelectorAll(".options button").forEach(function(btn){
+                btn.classList.remove("selected");
+            });
+
+            document.querySelector(".result").style.display = "none";
+
+            document.querySelector(".questionArea").innerHTML = `
+                    <p>${quesArray[currentQuestionIndex].question}</p>
+                `;
+
+                document.querySelector(".firstOption").innerHTML =
+                    quesArray[currentQuestionIndex].options[0];
+
+                document.querySelector(".secondOption").innerHTML =
+                    quesArray[currentQuestionIndex].options[1];
+
+                document.querySelector(".thirdOption").innerHTML =
+                    quesArray[currentQuestionIndex].options[2];
+
+                document.querySelector(".fourthOption").innerHTML =
+                    quesArray[currentQuestionIndex].options[3];
+
+                
+        }
+        let score = 0;
+        let selectedAnswer = "";
+        document.querySelectorAll(".options button").forEach(function(btn){
+            btn.classList.remove("selected");
+        });
+
+        function selectAnswer(button){
+
+            document.querySelectorAll(".options button").forEach(function(btn){ // removes the blue colour from the selected option 
+                btn.classList.remove("selected");
+            });
+
+            button.classList.add("selected"); //adds blue colour for the selected option 
+
+            selectedAnswer = button.innerText;
+        }
+
+        function nextButton() {
+
+            if(selectedAnswer === ""){
+                alert("Please select an answer");
+                return;
+            }
+            console.log("Selected:", selectedAnswer);
+            console.log("Correct:", quesArray[currentQuestionIndex].correctAnswer);
+
+
+            if(selectedAnswer === quesArray[currentQuestionIndex].correctAnswer){
+                score++;
+                 console.log("Score:", score);
+                   document.querySelector(".js-score").innerHTML =
+                   `Your Score : ${score}/${quesArray.length}`;
+            }
+
+            currentQuestionIndex++;
+            selectedAnswer = "";
+
+            if (currentQuestionIndex < quesArray.length) {
+                displayQuestion();
+            } 
+
+            else {
+
+                document.querySelector(".questionArea").style.display = "none";
+                document.querySelector(".options").style.display = "none";
+                document.querySelector(".next-btn").style.display = "none";
+                document.querySelector(".result").style.display = "block";
+
+                document.querySelector(".result").innerHTML = `
+                    <h1>Quiz Result</h1>
+                    <p>Your Score: ${score}/${quesArray.length}</p>
+                    <button class="restart-btn" onclick="restartQuiz()">Restart Quiz</button>
+                `;
+
+            }
+        }
+
+
+        function restartQuiz(){
+
+            score = 0;
+            currentQuestionIndex = 0;
+            selectedAnswer = "";
+
+            document.querySelector(".questionArea").style.display = "block";
+            document.querySelector(".options").style.display = "flex";
+            document.querySelector(".next-btn").style.display = "block";
+
+            document.querySelector(".result").style.display = "none";
+
+            document.querySelectorAll(".options button").forEach(function(btn){
+                btn.classList.remove("selected");
+            });
+
+            displayQuestion();
+        }
+        </script>
+</body>
+</html>
