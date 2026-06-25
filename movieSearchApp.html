@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Movie Search App</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: #0b0b0f; /* black theme */
+            color: #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* INPUT SECTION */
+        .searchInput {
+            margin-top: 40px;
+            padding: 12px 15px;
+            width: 300px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            background: white;
+            color: #111827;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .searchInput:focus {
+            border-color: #6b7280;
+            box-shadow: 0 0 6px rgba(0,0,0,0.1);
+        }
+
+        /* BUTTON */
+        button {
+            padding: 12px 18px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: white;
+            color: black;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #374151;
+        }
+
+        /* CONTAINER */
+        .movieContainer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* MOVIE CARD (LEFT IMAGE + RIGHT INFO) */
+        .movieCard {
+            display: flex;
+            width: 750px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .movieCard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+
+        /* LEFT IMAGE */
+        .movieCard img {
+            width: 250px;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* RIGHT CONTENT */
+        .movieInfo {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* TITLE */
+        .movieInfo h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #111827;
+        }
+
+        /* EACH ROW */
+        .movieInfo p {
+            margin: 0;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        /* LABEL */
+        .movieInfo b {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        /* PLOT BOX */
+        .plot {
+            margin-top: 8px;
+            padding: 12px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="searchBox">
+        <input class="searchInput">
+        <button onclick="searchBtn()">Search</button>
+    </div>
+    <div class="movieContainer"></div>
+    <script>
+        
+        async function searchBtn(){
+            let input = document.querySelector(".searchInput");
+            let inputValue = input.value.trim();
+            if(inputValue === ""){
+                alert("Please Enter a movie name");
+                return;
+            }
+            try{
+            
+            let apiUrl = "http://www.omdbapi.com/?t=" + inputValue + "&apikey=1f399f6a";
+            let response = await fetch(apiUrl); // it fetches the raw data 
+            let data = await response.json(); //convert it into json format 
+
+            let movieObj = data;
+                console.log(data); // important for debugging
+                if (movieObj.Response === "True") {
+                    console.log("Title : ",movieObj.Title);
+                    console.log("Year : ",movieObj.Year);
+                    console.log("Poster : ",movieObj.Poster);
+                    let html = `
+                        <div class="movieCard">
+
+                            <img src="${movieObj.Poster !== "N/A" ? movieObj.Poster : "https://via.placeholder.com/250x350"}">
+
+                            <div class="movieInfo">
+
+                                <h2>${movieObj.Title}</h2>
+
+                                <p><b>Year:</b> ${movieObj.Year}</p>
+                                <p><b>Genre:</b> ${movieObj.Genre}</p>
+                                <p><b>Rating:</b> ${movieObj.imdbRating}</p>
+
+                                <p><b>Director:</b> ${movieObj.Director}</p>
+                                <p><b>Actors:</b> ${movieObj.Actors}</p>
+
+                                <div class="plot">
+                                    <b>Plot:</b> ${movieObj.Plot}
+                                </div>
+
+                            </div>
+
+                        </div>
+                        `;
+              ;
+                    document.querySelector(".movieContainer").innerHTML = html;
+                } else {
+                     document.querySelector(".movieContainer").innerHTML = `<p>Movie not found!</p>`;
+                }
+            }catch(error){
+                console.log("Error:" , error);
+            }
+
+        }
+    
+    </script>
+</body>
+</html>
