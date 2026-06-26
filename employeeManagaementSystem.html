@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Employee Management System</title>
+    <style>
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f8;
+            color: #111827;
+        }
+
+        /* TITLE */
+        .title-box {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+
+        .title-box h1 {
+            font-size:28px;
+            font-weight:700;
+            margin: 0;
+            color: #111827;
+        }
+
+        /* MAIN LAYOUT */
+        .container {
+            display: flex;
+             min-height: calc(100vh - 90px);
+        }
+
+        /* LEFT SIDE (FORM) */
+        .left {
+            width: 30%;
+            padding: 25px;
+
+            background: white;
+
+            /* spacing from page */
+            margin: 20px;
+            border-radius: 16px;
+
+            /* separation from right side */
+            border: 1px solid #e5e7eb;
+
+            /* soft floating effect */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: fit-content;
+            font-weight: 600;  
+        }
+
+        /* RIGHT SIDE (DISPLAY AREA) */
+        .right{
+            width:70%;
+            padding:25px;
+            margin:20px 20px 20px 0;
+
+            background:white;
+            border-radius:16px;
+            border:1px solid #e5e7eb;
+            box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+            overflow-y:auto;
+        }
+
+        /* INPUTS */
+        input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #d1d5db;
+            outline: none;
+            width: 100%;
+            background: white;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #10a37f;
+        }
+
+        /* MAIN BUTTON */
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+
+            background: #10a37f;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+            transition:.25s ease;
+        }
+
+        button:hover {
+            background: #0e8c6d;
+        }
+
+        /* DISPLAY AREA */
+        .displayArea {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* EMPLOYEE CARD */
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 12px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            transition: 0.2s;
+        }
+
+        .card:hover{
+            transform:translateY(-3px);
+            box-shadow:0 8px 18px rgba(0,0,0,.12);
+        }
+
+        /* CARD TEXT */
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* BUTTON GROUP */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* EDIT BUTTON */
+        .btn-group button:first-child {
+            background: #3b82f6;
+        }
+
+        /* DELETE BUTTON */
+        .btn-group button:last-child {
+            background: #ef4444;
+        }
+
+        /* BUTTON HOVER */
+        .btn-group button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title-box">
+        <h1>Employee Management System</h1>
+    </div>
+        <div class="container">
+
+    <div class="left">
+        <!-- inputs + submit button here -->
+        <label for="name">Employee Name : </label>
+        <input type="text" class="name"><br>
+        <label for="name">Employee Role : </label>
+        <input type="text" class="role"><br>
+        <label for="name">Employee Salary : </label>
+        <input type="number" class="salary"><br>
+        <button onclick="submitBtn()">Submit</button>
+    </div>
+
+    <div class="right">
+        <div class="displayArea"></div>
+    </div>
+
+</div>
+        
+    <script>
+        let arr=[];
+        let editIndex = -1; // means  adding new employee
+
+        function submitBtn(){
+        let nameInput = document.querySelector(".name");
+        let nameValue = nameInput.value;
+
+        let roleInput = document.querySelector(".role");
+        let roleValue = roleInput.value;
+
+        let salaryInput = document.querySelector(".salary");
+        let salaryValue = salaryInput.value;
+
+        const employeeObj = {
+            name : nameValue,
+            role : roleValue,
+            salary : salaryValue
+        };
+
+        console.log(employeeObj);
+
+        if (editIndex === -1) {
+            arr.push(employeeObj);   // ADD new
+        } else {
+            arr[editIndex] = employeeObj;  // UPDATE existing
+            editIndex = -1; // reset edit mode
+        }
+
+        // ✅ CLEAR INPUTS AFTER SUBMIT
+            nameInput.value = "";
+            roleInput.value = "";
+            salaryInput.value = "";
+
+        renderEmployees(); //displays all the employee list from the array
+
+        
+    }
+
+    function deleteEmployees(index){
+        arr.splice(index,1);
+        renderEmployees();
+    }
+
+    function editEmployees(index){
+        
+        let nameInput = document.querySelector(".name");
+        let roleInput = document.querySelector(".role");
+        let salaryInput = document.querySelector(".salary");
+
+        nameInput.value = arr[index].name;
+        roleInput.value = arr[index].role;
+        salaryInput.value = arr[index].salary;
+
+        
+        editIndex = index;
+
+    }
+    function renderEmployees() {
+
+        let html = "";
+
+        for (let i = 0; i < arr.length; i++) {
+            html += `
+                <div class="card">
+                    <div class="card-info">
+                        <div>${arr[i].name}</div>
+                        <div>${arr[i].role}</div>
+                        <div>${arr[i].salary}</div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button onclick="editEmployees(${i})">Edit</button>
+                        <button onclick="deleteEmployees(${i})">Delete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.querySelector(".displayArea").innerHTML = html;
+    }
+
+    
+    
+        
+    </script>
+</body>
+</html>
